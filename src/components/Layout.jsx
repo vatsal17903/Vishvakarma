@@ -52,6 +52,30 @@ function Layout() {
             <main className="main-content-with-top-nav">
                 <Outlet />
             </main>
+
+            {/* Mobile Bottom Navigation */}
+            <nav className="mobile-bottom-nav">
+                <NavLink to="/dashboard" className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`}>
+                    <span className="nav-icon">📊</span>
+                    <span className="nav-label">Home</span>
+                </NavLink>
+                <NavLink to="/quotations" className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`}>
+                    <span className="nav-icon">📝</span>
+                    <span className="nav-label">Quotes</span>
+                </NavLink>
+                <NavLink to="/receipts" className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`}>
+                    <span className="nav-icon">💰</span>
+                    <span className="nav-label">Receipts</span>
+                </NavLink>
+                <NavLink to="/bills" className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`}>
+                    <span className="nav-icon">📑</span>
+                    <span className="nav-label">Bills</span>
+                </NavLink>
+                <NavLink to="/settings" className={({ isActive }) => `mobile-nav-item ${isActive ? 'active' : ''}`}>
+                    <span className="nav-icon">⚙️</span>
+                    <span className="nav-label">More</span>
+                </NavLink>
+            </nav>
         </div>
     );
 }

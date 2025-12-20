@@ -797,6 +797,93 @@ a:hover {
   }
 }
 
+/* Mobile Bottom Navigation Styles */
+.mobile-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: var(--z-nav);
+  box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.05);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.mobile-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 10px;
+  font-weight: 500;
+  width: 100%;
+  height: 100%;
+  transition: all var(--transition-fast);
+}
+
+.mobile-nav-item .nav-icon {
+  font-size: 20px;
+}
+
+.mobile-nav-item.active {
+  color: var(--color-primary);
+  background: var(--color-primary-glow);
+}
+
+/* Hide Nav Center on Mobile */
+@media (max-width: 768px) {
+  .nav-center {
+    display: none !important;
+  }
+
+  .main-content-with-top-nav {
+    padding-bottom: 80px;
+    /* Space for bottom nav */
+  }
+
+  .nav-left {
+    flex: 2;
+    /* Give more space to company name on mobile */
+  }
+}
+
+/* Hide Mobile Nav on Desktop */
+@media (min-width: 769px) {
+  .mobile-bottom-nav {
+    display: none;
+  }
+}
+
+/* Dashboard Tweaks for Small Screens */
+@media (max-width: 480px) {
+
+  .stat-grid,
+  .action-grid {
+    gap: var(--space-sm);
+  }
+
+  .stat-card,
+  .action-card {
+    padding: var(--space-md);
+  }
+
+  .stat-value {
+    font-size: var(--font-size-xl);
+  }
+
+  .page {
+    padding: var(--space-md);
+  }
+}
+
 .action-card {
   background: var(--gradient-card);
   border: 1px solid var(--border-color);
