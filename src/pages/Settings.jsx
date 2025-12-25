@@ -12,7 +12,8 @@ function Settings() {
         address: company?.address || '',
         phone: company?.phone || '',
         email: company?.email || '',
-        gst_number: company?.gst_number || ''
+        gst_number: company?.gst_number || '',
+        bank_details: company?.bank_details || ''
     });
 
     const [passwordForm, setPasswordForm] = useState({
@@ -174,6 +175,17 @@ function Settings() {
                             className="form-input"
                             value={companyForm.gst_number}
                             onChange={e => setCompanyForm({ ...companyForm, gst_number: e.target.value })}
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label className="form-label">Bank Account Details Of Company</label>
+                        <textarea
+                            className="form-textarea"
+                            value={companyForm.bank_details}
+                            onChange={e => setCompanyForm({ ...companyForm, bank_details: e.target.value })}
+                            rows={4}
+                            placeholder="Bank Name, Account Number, IFSC, Branch, etc."
                         />
                     </div>
 

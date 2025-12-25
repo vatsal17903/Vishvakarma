@@ -48,15 +48,7 @@ function QuotationView() {
         window.open(`/api/pdf/quotation/${id}`, '_blank');
     };
 
-    const handleWhatsAppShare = async () => {
-        try {
-            const response = await fetch(`/api/pdf/whatsapp/quotation/${id}`, { credentials: 'include' });
-            const data = await response.json();
-            window.open(data.whatsappUrl, '_blank');
-        } catch (error) {
-            toast.error('Failed to generate WhatsApp link');
-        }
-    };
+
 
     const handleCreateReceipt = () => {
         navigate(`/receipts/new?quotation=${id}`);
@@ -178,32 +170,62 @@ function QuotationView() {
             {quotation.items && quotation.items.length > 0 && (
                 <div className="card mb-lg">
                     <h3 style={{ marginBottom: 'var(--space-md)' }}>Items</h3>
-                    <div className="table-container">
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Item</th>
-                                    <th>Room</th>
-                                    <th>Qty</th>
-                                    <th>Rate</th>
-                                    <th>Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {quotation.items.map((item, index) => (
-                                    <tr key={index}>
-                                        <td>{index + 1}</td>
-                                        <td>{item.item_name}</td>
-                                        <td>{item.room_label || '-'}</td>
-                                        <td>{item.quantity}</td>
-                                        <td>{formatCurrency(item.rate)}</td>
-                                        <td>{formatCurrency(item.amount)}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+
+                    {Object.entries(quotation.items.reduce((acc, item) => {
+                        const room = item.room_label || 'General';
+                        if (!acc[room]) acc[room] = [];
+                        acc[room].push(item);
+                        return acc;
+                    }, {})).map(([room, items]) => (
+                        <div key={room} style={{ marginBottom: '24px', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', overflow: 'hidden' }}>
+                            <div style={{
+                                background: 'var(--bg-hover)',
+                                padding: '12px 16px',
+                                borderBottom: '1px solid var(--border-color)',
+                                fontWeight: '700',
+                                color: 'var(--text-color)',
+                                fontSize: '1.1em'
+                            }}>
+                                {room.toUpperCase()}
+                            </div>
+                            <div className="table-container" style={{ margin: 0, boxShadow: 'none' }}>
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th style={{ width: '50px' }}>#</th>
+                                            <th>Description</th>
+                                            <th style={{ width: '80px' }}>Unit</th>
+                                            <th style={{ width: '80px', textAlign: 'right' }}>Qty</th>
+                                            {!(quotation?.rate_per_sqft > 0) && <th style={{ width: '80px', textAlign: 'center' }}>MM</th>}
+                                            {!(quotation?.rate_per_sqft > 0) && <th style={{ width: '120px', textAlign: 'right' }}>Rate</th>}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {items.map((item, index) => (
+                                            <tr key={index}>
+                                                <td>{index + 1}</td>
+                                                <td>
+                                                    <div style={{ fontWeight: '500' }}>{item.item_name}</div>
+                                                    {item.description && <div className="text-muted" style={{ fontSize: '0.9em' }}>{item.description}</div>}
+                                                    {item.brand && <div className="text-muted" style={{ fontSize: '0.9em' }}>Make: {item.brand}</div>}
+                                                </td>
+                                                <td>{item.unit}</td>
+                                                <td style={{ textAlign: 'right' }}>{item.quantity}</td>
+                                                {!(quotation?.rate_per_sqft > 0) && <td style={{ textAlign: 'center' }}>{item.material}</td>}
+                                                {!(quotation?.rate_per_sqft > 0) && <td style={{ textAlign: 'right' }}>{formatCurrency(item.rate)}</td>}
+                                            </tr>
+                                        ))}
+                                        {!(quotation?.rate_per_sqft > 0) && (
+                                            <tr style={{ background: 'var(--bg-surface)', fontWeight: 'bold' }}>
+                                                <td colSpan={5} style={{ textAlign: 'right', paddingRight: '16px' }}>Component Total</td>
+                                                <td style={{ textAlign: 'right' }}>{formatCurrency(items.reduce((sum, i) => sum + parseFloat(i.amount || 0), 0))}</td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             )}
 
@@ -293,9 +315,7 @@ function QuotationView() {
                     <button onClick={handleDownloadPDF} className="btn btn-primary btn-block">
                         📄 Download PDF
                     </button>
-                    <button onClick={handleWhatsAppShare} className="btn btn-success btn-block">
-                        📱 Share on WhatsApp
-                    </button>
+
                     <button onClick={handleCreateReceipt} className="btn btn-secondary btn-block">
                         💰 Create Receipt
                     </button>

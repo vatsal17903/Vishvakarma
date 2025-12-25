@@ -101,6 +101,10 @@ function Dashboard() {
                     <div className="action-icon">📦</div>
                     <span className="action-title">Packages</span>
                 </Link>
+                <Link to="/sqft-defaults" className="action-card">
+                    <div className="action-icon">📐</div>
+                    <span className="action-title">Sq.Ft Items</span>
+                </Link>
                 <Link to="/reports" className="action-card">
                     <div className="action-icon">📊</div>
                     <span className="action-title">Reports</span>

@@ -12,13 +12,13 @@ const requireCompany = (req, res, next) => {
 };
 
 // Get all packages for current company
-router.get('/', requireCompany, (req, res) => {
+router.get('/', requireCompany, async (req, res) => {
     try {
-        const packages = db.prepare(`
+        const [packages] = await db.execute(`
       SELECT * FROM packages 
       WHERE company_id = ? AND is_active = 1
       ORDER BY tier, bhk_type
-    `).all(req.session.companyId);
+    `, [req.session.companyId]);
         res.json(packages);
     } catch (error) {
         console.error('Get packages error:', error);
@@ -27,22 +27,24 @@ router.get('/', requireCompany, (req, res) => {
 });
 
 // Get package with items
-router.get('/:id', requireCompany, (req, res) => {
+router.get('/:id', requireCompany, async (req, res) => {
     try {
-        const pkg = db.prepare(`
+        const [packages] = await db.execute(`
       SELECT * FROM packages 
       WHERE id = ? AND company_id = ?
-    `).get(req.params.id, req.session.companyId);
+    `, [req.params.id, req.session.companyId]);
+
+        const pkg = packages[0];
 
         if (!pkg) {
             return res.status(404).json({ error: 'Package not found' });
         }
 
-        const items = db.prepare(`
+        const [items] = await db.execute(`
       SELECT * FROM package_items 
       WHERE package_id = ?
       ORDER BY sort_order, id
-    `).all(req.params.id);
+    `, [req.params.id]);
 
         res.json({ ...pkg, items });
     } catch (error) {
@@ -52,31 +54,34 @@ router.get('/:id', requireCompany, (req, res) => {
 });
 
 // Create package
-router.post('/', requireCompany, (req, res) => {
+router.post('/', requireCompany, async (req, res) => {
     try {
         const { name, bhk_type, tier, base_rate_sqft, description, items } = req.body;
 
-        const result = db.prepare(`
+        const [result] = await db.execute(`
       INSERT INTO packages (company_id, name, bhk_type, tier, base_rate_sqft, description)
       VALUES (?, ?, ?, ?, ?, ?)
-    `).run(req.session.companyId, name, bhk_type, tier, base_rate_sqft, description);
+    `, [req.session.companyId, name, bhk_type, tier, base_rate_sqft, description]);
 
-        const packageId = result.lastInsertRowid;
+        const packageId = result.insertId;
 
         // Insert items
         if (items && items.length > 0) {
-            const insertItem = db.prepare(`
-        INSERT INTO package_items (package_id, item_name, description, unit, sq_foot, quantity, rate, amount, room_type, sort_order)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `);
+            const query = `
+        INSERT INTO package_items (package_id, item_name, description, unit, sq_foot, quantity, rate, amount, room_type, sort_order, mm, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `;
 
-            items.forEach((item, index) => {
-                insertItem.run(packageId, item.item_name, item.description, item.unit, item.sq_foot, item.quantity, item.rate, item.amount, item.room_type, index);
-            });
+            for (const [index, item] of items.entries()) {
+                await db.execute(query, [
+                    packageId, item.item_name, item.description, item.unit, item.sq_foot,
+                    item.quantity, item.rate, item.amount, item.room_type, index, item.mm, item.status
+                ]);
+            }
         }
 
-        const pkg = db.prepare('SELECT * FROM packages WHERE id = ?').get(packageId);
-        res.status(201).json(pkg);
+        const [packages] = await db.execute('SELECT * FROM packages WHERE id = ?', [packageId]);
+        res.status(201).json(packages[0]);
     } catch (error) {
         console.error('Create package error:', error);
         res.status(500).json({ error: 'Failed to create package' });
@@ -84,32 +89,35 @@ router.post('/', requireCompany, (req, res) => {
 });
 
 // Update package
-router.put('/:id', requireCompany, (req, res) => {
+router.put('/:id', requireCompany, async (req, res) => {
     try {
         const { name, bhk_type, tier, base_rate_sqft, description, items } = req.body;
 
-        db.prepare(`
+        await db.execute(`
       UPDATE packages 
       SET name = ?, bhk_type = ?, tier = ?, base_rate_sqft = ?, description = ?
       WHERE id = ? AND company_id = ?
-    `).run(name, bhk_type, tier, base_rate_sqft, description, req.params.id, req.session.companyId);
+    `, [name, bhk_type, tier, base_rate_sqft, description, req.params.id, req.session.companyId]);
 
         // Update items
         if (items) {
-            db.prepare('DELETE FROM package_items WHERE package_id = ?').run(req.params.id);
+            await db.execute('DELETE FROM package_items WHERE package_id = ?', [req.params.id]);
 
-            const insertItem = db.prepare(`
-        INSERT INTO package_items (package_id, item_name, description, unit, sq_foot, quantity, rate, amount, room_type, sort_order)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `);
+            const query = `
+        INSERT INTO package_items (package_id, item_name, description, unit, sq_foot, quantity, rate, amount, room_type, sort_order, mm, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `;
 
-            items.forEach((item, index) => {
-                insertItem.run(req.params.id, item.item_name, item.description, item.unit, item.sq_foot, item.quantity, item.rate, item.amount, item.room_type, index);
-            });
+            for (const [index, item] of items.entries()) {
+                await db.execute(query, [
+                    req.params.id, item.item_name, item.description, item.unit, item.sq_foot,
+                    item.quantity, item.rate, item.amount, item.room_type, index, item.mm, item.status
+                ]);
+            }
         }
 
-        const pkg = db.prepare('SELECT * FROM packages WHERE id = ?').get(req.params.id);
-        res.json(pkg);
+        const [packages] = await db.execute('SELECT * FROM packages WHERE id = ?', [req.params.id]);
+        res.json(packages[0]);
     } catch (error) {
         console.error('Update package error:', error);
         res.status(500).json({ error: 'Failed to update package' });
@@ -117,9 +125,9 @@ router.put('/:id', requireCompany, (req, res) => {
 });
 
 // Delete package (soft delete)
-router.delete('/:id', requireCompany, (req, res) => {
+router.delete('/:id', requireCompany, async (req, res) => {
     try {
-        db.prepare('UPDATE packages SET is_active = 0 WHERE id = ? AND company_id = ?').run(req.params.id, req.session.companyId);
+        await db.execute('UPDATE packages SET is_active = 0 WHERE id = ? AND company_id = ?', [req.params.id, req.session.companyId]);
         res.json({ success: true, message: 'Package deleted successfully' });
     } catch (error) {
         console.error('Delete package error:', error);
@@ -128,13 +136,13 @@ router.delete('/:id', requireCompany, (req, res) => {
 });
 
 // Get packages by tier
-router.get('/tier/:tier', requireCompany, (req, res) => {
+router.get('/tier/:tier', requireCompany, async (req, res) => {
     try {
-        const packages = db.prepare(`
+        const [packages] = await db.execute(`
       SELECT * FROM packages 
       WHERE company_id = ? AND tier = ? AND is_active = 1
       ORDER BY bhk_type
-    `).all(req.session.companyId, req.params.tier);
+    `, [req.session.companyId, req.params.tier]);
         res.json(packages);
     } catch (error) {
         console.error('Get packages by tier error:', error);

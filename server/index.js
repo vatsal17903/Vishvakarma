@@ -13,6 +13,7 @@ import receiptRoutes from './routes/receipts.js';
 import billRoutes from './routes/bills.js';
 import reportRoutes from './routes/reports.js';
 import pdfRoutes from './routes/pdf.js';
+import sqftDefaultsRoutes from './routes/sqft-defaults.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -41,7 +42,7 @@ app.use(session({
 }));
 
 // Initialize database
-initializeDatabase();
+await initializeDatabase();
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -53,6 +54,7 @@ app.use('/api/receipts', receiptRoutes);
 app.use('/api/bills', billRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/pdf', pdfRoutes);
+app.use('/api/sqft-defaults', sqftDefaultsRoutes);
 
 // Serve static files in production
 const distPath = path.join(__dirname, '..', 'dist');

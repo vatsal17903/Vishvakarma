@@ -261,9 +261,9 @@ function PackageForm() {
         setItems([...items, {
             description: '',
             unit: 'NO.',
-            sq_foot: '',
             quantity: 1,
-            rate: 0,
+            mm: '',
+            status: '',
             room_type: roomType
         }]);
     };
@@ -443,8 +443,9 @@ function PackageForm() {
                                                     <th style={{ width: '50px' }}>No.</th>
                                                     <th>Description</th>
                                                     <th style={{ width: '100px' }}>Unit</th>
-                                                    <th style={{ width: '100px' }}>Sq. Foot</th>
                                                     <th style={{ width: '100px' }}>Quantity</th>
+                                                    <th style={{ width: '150px' }}>mm</th>
+                                                    <th style={{ width: '150px' }}>Status</th>
                                                     <th style={{ width: '50px' }}></th>
                                                 </tr>
                                             </thead>
@@ -482,18 +483,27 @@ function PackageForm() {
                                                                 <input
                                                                     type="number"
                                                                     className="form-input"
-                                                                    value={item.sq_foot}
-                                                                    onChange={(e) => updateItem(item.originalIndex, 'sq_foot', e.target.value)}
-                                                                    placeholder="Sq. Ft"
+                                                                    value={item.quantity}
+                                                                    onChange={(e) => updateItem(item.originalIndex, 'quantity', e.target.value)}
+                                                                    placeholder="Qty"
                                                                 />
                                                             </td>
                                                             <td>
                                                                 <input
-                                                                    type="number"
+                                                                    type="text"
                                                                     className="form-input"
-                                                                    value={item.quantity}
-                                                                    onChange={(e) => updateItem(item.originalIndex, 'quantity', e.target.value)}
-                                                                    placeholder="Qty"
+                                                                    value={item.mm || ''}
+                                                                    onChange={(e) => updateItem(item.originalIndex, 'mm', e.target.value)}
+                                                                    placeholder="mm"
+                                                                />
+                                                            </td>
+                                                            <td>
+                                                                <input
+                                                                    type="text"
+                                                                    className="form-input"
+                                                                    value={item.status || ''}
+                                                                    onChange={(e) => updateItem(item.originalIndex, 'status', e.target.value)}
+                                                                    placeholder="Status"
                                                                 />
                                                             </td>
                                                             <td>

@@ -5,7 +5,7 @@ import { db } from '../database/init.js';
 const router = express.Router();
 
 // Login
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
     try {
         const { username, password } = req.body;
 
@@ -13,13 +13,14 @@ router.post('/login', (req, res) => {
             return res.status(400).json({ error: 'Username and password required' });
         }
 
-        const user = db.prepare('SELECT * FROM users WHERE username = ?').get(username);
+        const [users] = await db.execute('SELECT * FROM users WHERE username = ?', [username]);
+        const user = users[0];
 
         if (!user) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
-        const isMatch = bcrypt.compareSync(password, user.password);
+        const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
             return res.status(401).json({ error: 'Invalid credentials' });
@@ -73,7 +74,7 @@ router.get('/session', (req, res) => {
 });
 
 // Change password
-router.post('/change-password', (req, res) => {
+router.post('/change-password', async (req, res) => {
     try {
         if (!req.session.userId) {
             return res.status(401).json({ error: 'Not authenticated' });
@@ -81,14 +82,15 @@ router.post('/change-password', (req, res) => {
 
         const { currentPassword, newPassword } = req.body;
 
-        const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.session.userId);
+        const [users] = await db.execute('SELECT * FROM users WHERE id = ?', [req.session.userId]);
+        const user = users[0];
 
-        if (!bcrypt.compareSync(currentPassword, user.password)) {
+        if (!await bcrypt.compare(currentPassword, user.password)) {
             return res.status(400).json({ error: 'Current password is incorrect' });
         }
 
-        const hashedPassword = bcrypt.hashSync(newPassword, 10);
-        db.prepare('UPDATE users SET password = ? WHERE id = ?').run(hashedPassword, req.session.userId);
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await db.execute('UPDATE users SET password = ? WHERE id = ?', [hashedPassword, req.session.userId]);
 
         res.json({ success: true, message: 'Password changed successfully' });
     } catch (error) {

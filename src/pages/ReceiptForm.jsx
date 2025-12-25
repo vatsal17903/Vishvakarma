@@ -127,16 +127,7 @@ function ReceiptForm() {
         }
     };
 
-    const handleWhatsAppShare = async () => {
-        if (!id) return;
-        try {
-            const response = await fetch(`/api/pdf/whatsapp/receipt/${id}`, { credentials: 'include' });
-            const data = await response.json();
-            window.open(data.whatsappUrl, '_blank');
-        } catch (error) {
-            toast.error('Failed to generate WhatsApp link');
-        }
-    };
+
 
     const handleDelete = async () => {
         if (!confirm('Are you sure you want to delete this receipt?')) return;
@@ -315,9 +306,7 @@ function ReceiptForm() {
                             <button type="button" onClick={handleDownloadPDF} className="btn btn-secondary btn-block">
                                 📄 Download PDF
                             </button>
-                            <button type="button" onClick={handleWhatsAppShare} className="btn btn-success btn-block">
-                                📱 Share on WhatsApp
-                            </button>
+
                             <button type="button" onClick={handleDelete} className="btn btn-danger btn-block">
                                 🗑️ Delete Receipt
                             </button>

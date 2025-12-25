@@ -48,15 +48,7 @@ function BillView() {
         window.open(`/api/pdf/bill/${id}`, '_blank');
     };
 
-    const handleWhatsAppShare = async () => {
-        try {
-            const response = await fetch(`/api/pdf/whatsapp/bill/${id}`, { credentials: 'include' });
-            const data = await response.json();
-            window.open(data.whatsappUrl, '_blank');
-        } catch (error) {
-            toast.error('Failed to generate WhatsApp link');
-        }
-    };
+
 
     const handleCreateReceipt = () => {
         navigate(`/receipts/new?quotation=${bill.quotation_id}`);
@@ -242,9 +234,7 @@ function BillView() {
                     <button onClick={handleDownloadPDF} className="btn btn-primary btn-block">
                         📄 Download Invoice PDF
                     </button>
-                    <button onClick={handleWhatsAppShare} className="btn btn-success btn-block">
-                        📱 Share on WhatsApp
-                    </button>
+
                     {bill.balance_amount > 0 && (
                         <button onClick={handleCreateReceipt} className="btn btn-secondary btn-block">
                             💰 Record Payment

@@ -11,6 +11,7 @@ import Clients from './pages/Clients';
 import ClientForm from './pages/ClientForm';
 import Packages from './pages/Packages';
 import PackageForm from './pages/PackageForm';
+import SqftDefaults from './pages/SqftDefaults';
 import Quotations from './pages/Quotations';
 import QuotationForm from './pages/QuotationForm';
 import QuotationView from './pages/QuotationView';
@@ -101,6 +102,9 @@ function AppRoutes() {
                 <Route path="packages" element={<Packages />} />
                 <Route path="packages/new" element={<PackageForm />} />
                 <Route path="packages/:id/edit" element={<PackageForm />} />
+
+                {/* Sqft Defaults */}
+                <Route path="sqft-defaults" element={<SqftDefaults />} />
 
                 {/* Quotations */}
                 <Route path="quotations" element={<Quotations />} />
