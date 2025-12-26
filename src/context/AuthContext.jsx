@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
+const API_URL = 'https://apivkq.softodoor.com';
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
@@ -13,7 +14,7 @@ export function AuthProvider({ children }) {
 
     const checkSession = async () => {
         try {
-            const response = await fetch('/api/auth/session', {
+            const response = await fetch(`${API_URL}/api/auth/session`, {
                 credentials: 'include'
             });
             const data = await response.json();
@@ -35,7 +36,7 @@ export function AuthProvider({ children }) {
     };
 
     const login = async (username, password) => {
-        const response = await fetch('/api/auth/login', {
+        const response = await fetch(`${API_URL}/api/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -55,7 +56,7 @@ export function AuthProvider({ children }) {
 
     const logout = async () => {
         try {
-            await fetch('/api/auth/logout', {
+            await fetch(`${API_URL}/api/auth/logout`, {
                 method: 'POST',
                 credentials: 'include'
             });
@@ -67,7 +68,7 @@ export function AuthProvider({ children }) {
     };
 
     const selectCompany = async (companyId) => {
-        const response = await fetch('/api/company/select', {
+        const response = await fetch(`${API_URL}/api/company/select`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',

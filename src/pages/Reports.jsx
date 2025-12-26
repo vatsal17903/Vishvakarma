@@ -30,9 +30,9 @@ function Reports() {
             const query = `start_date=${dateRange.start}&end_date=${dateRange.end}`;
 
             const [summaryRes, bedroomRes, projectRes] = await Promise.all([
-                fetch(`/api/reports/summary?${query}`, { credentials: 'include' }),
-                fetch(`/api/reports/bedroom-wise?${query}`, { credentials: 'include' }),
-                fetch(`/api/reports/project-wise?${query}`, { credentials: 'include' })
+                fetch(`https://apivkq.softodoor.com/api/reports/summary?${query}`, { credentials: 'include' }),
+                fetch(`https://apivkq.softodoor.com/api/reports/bedroom-wise?${query}`, { credentials: 'include' }),
+                fetch(`https://apivkq.softodoor.com/api/reports/project-wise?${query}`, { credentials: 'include' })
             ]);
 
             setSummary(await summaryRes.json());
@@ -47,7 +47,7 @@ function Reports() {
 
     const fetchTrends = async () => {
         try {
-            const response = await fetch('/api/reports/monthly-trend', { credentials: 'include' });
+            const response = await fetch(`${API_URL}/api/reports/monthly-trend`, { credentials: 'include' });
             setMonthlyTrend(await response.json());
         } catch (error) {
             console.error('Failed to load trends');

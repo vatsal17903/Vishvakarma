@@ -14,7 +14,7 @@ function Bills() {
 
     const fetchBills = async () => {
         try {
-            const response = await fetch('/api/bills', { credentials: 'include' });
+            const response = await fetch(`${API_URL}/api/bills`, { credentials: 'include' });
             const data = await response.json();
             setBills(data);
         } catch (error) {
@@ -29,7 +29,7 @@ function Bills() {
         if (!confirm('Are you sure you want to delete this bill?')) return;
 
         try {
-            const response = await fetch(`/api/bills/${id}`, {
+            const response = await fetch(`https://apivkq.softodoor.com/api/bills/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });

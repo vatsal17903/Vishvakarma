@@ -3,7 +3,8 @@
  * Handles API calls with proper URL configuration for both development and production
  */
 
-const API_URL = import.meta.env.VITE_API_URL || '';
+// Temporary hardcoded fix - Vite env not working
+const API_URL = 'https://apivkq.softodoor.com';
 
 /**
  * Make a fetch request to the API

@@ -5,8 +5,14 @@ export default defineConfig(({ mode }) => {
   // Load env file based on `mode` in the current working directory.
   const env = loadEnv(mode, process.cwd(), '');
 
+  console.log('🔧 Vite Config Debug:');
+  console.log('  Mode:', mode);
+  console.log('  VITE_API_URL from env:', env.VITE_API_URL);
+
   return {
     plugins: [react()],
+    // Vite automatically exposes VITE_ prefixed env vars
+    envPrefix: 'VITE_',  
     server: {
       host: true, // Expose to local network
       port: 5173,

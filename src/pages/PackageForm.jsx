@@ -64,7 +64,7 @@ function PackageForm() {
 
     const fetchPackage = async () => {
         try {
-            const response = await fetch(`/api/packages/${id}`, { credentials: 'include' });
+            const response = await fetch(`https://apivkq.softodoor.com/api/packages/${id}`, { credentials: 'include' });
             if (!response.ok) throw new Error('Package not found');
             const data = await response.json();
 
@@ -283,7 +283,7 @@ function PackageForm() {
 
         setLoading(true);
         try {
-            const response = await fetch(`/api/packages/${id}`, {
+            const response = await fetch(`https://apivkq.softodoor.com/api/packages/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });

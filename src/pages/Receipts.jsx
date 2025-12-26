@@ -13,7 +13,7 @@ function Receipts() {
 
     const fetchReceipts = async () => {
         try {
-            const response = await fetch('/api/receipts', { credentials: 'include' });
+            const response = await fetch(`${API_URL}/api/receipts`, { credentials: 'include' });
             const data = await response.json();
             setReceipts(data);
         } catch (error) {
@@ -28,7 +28,7 @@ function Receipts() {
         if (!confirm('Are you sure you want to delete this receipt?')) return;
 
         try {
-            const response = await fetch(`/api/receipts/${id}`, {
+            const response = await fetch(`https://apivkq.softodoor.com/api/receipts/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });

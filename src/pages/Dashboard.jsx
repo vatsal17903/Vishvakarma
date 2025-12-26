@@ -18,9 +18,9 @@ function Dashboard() {
     const fetchDashboardData = async () => {
         try {
             const [statsRes, quotationsRes, receiptsRes] = await Promise.all([
-                fetch('/api/reports/dashboard', { credentials: 'include' }),
-                fetch('/api/quotations/recent?limit=5', { credentials: 'include' }),
-                fetch('/api/receipts/recent?limit=5', { credentials: 'include' })
+                fetch(`${API_URL}/api/reports/dashboard`, { credentials: 'include' }),
+                fetch(`${API_URL}/api/quotations/recent?limit=5`, { credentials: 'include' }),
+                fetch(`${API_URL}/api/receipts/recent?limit=5`, { credentials: 'include' })
             ]);
 
             const statsData = await statsRes.json();

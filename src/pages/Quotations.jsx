@@ -14,7 +14,7 @@ function Quotations() {
 
     const fetchQuotations = async () => {
         try {
-            const response = await fetch('/api/quotations', { credentials: 'include' });
+            const response = await fetch(`${API_URL}/api/quotations`, { credentials: 'include' });
             const data = await response.json();
             setQuotations(data);
         } catch (error) {
@@ -29,7 +29,7 @@ function Quotations() {
         if (!confirm('Are you sure you want to delete this quotation?')) return;
 
         try {
-            const response = await fetch(`/api/quotations/${id}`, {
+            const response = await fetch(`https://apivkq.softodoor.com/api/quotations/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });

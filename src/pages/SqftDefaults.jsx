@@ -16,7 +16,7 @@ function SqftDefaults() {
 
     const fetchDefaults = async () => {
         try {
-            const res = await fetch('/api/sqft-defaults', { credentials: 'include' });
+            const res = await fetch(`${API_URL}/api/sqft-defaults`, { credentials: 'include' });
             if (res.ok) {
                 const data = await res.json();
                 setItems(data.items || []);
@@ -34,7 +34,7 @@ function SqftDefaults() {
     const handleSave = async () => {
         setSaving(true);
         try {
-            const res = await fetch('/api/sqft-defaults', {
+            const res = await fetch(`${API_URL}/api/sqft-defaults`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',

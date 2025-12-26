@@ -17,7 +17,7 @@ function CompanySelect() {
 
     const fetchCompanies = async () => {
         try {
-            const response = await fetch('/api/company', {
+            const response = await fetch(`${API_URL}/api/company`, {
                 credentials: 'include'
             });
             const data = await response.json();

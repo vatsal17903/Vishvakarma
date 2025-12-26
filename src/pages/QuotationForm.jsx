@@ -88,11 +88,11 @@ function QuotationForm() {
 
     const fetchInitialData = async () => {
         try {
-            const packagesRes = await fetch('/api/packages', { credentials: 'include' });
+            const packagesRes = await fetch(`${API_URL}/api/packages`, { credentials: 'include' });
             setPackages(await packagesRes.json());
 
             if (isEdit) {
-                const quotationRes = await fetch(`/api/quotations/${id}`, { credentials: 'include' });
+                const quotationRes = await fetch(`https://apivkq.softodoor.com/api/quotations/${id}`, { credentials: 'include' });
                 if (!quotationRes.ok) throw new Error('Quotation not found');
                 const quotation = await quotationRes.json();
 
@@ -140,7 +140,7 @@ function QuotationForm() {
             } else {
                 // Fetch company defaults for new quotation
                 try {
-                    const companyRes = await fetch('/api/company/current', { credentials: 'include' });
+                    const companyRes = await fetch(`${API_URL}/api/company/current`, { credentials: 'include' });
                     if (companyRes.ok) {
                         const { company } = await companyRes.json();
                         if (company) {
@@ -213,7 +213,7 @@ function QuotationForm() {
         }
 
         try {
-            const response = await fetch(`/api/packages/${packageId}`, { credentials: 'include' });
+            const response = await fetch(`https://apivkq.softodoor.com/api/packages/${packageId}`, { credentials: 'include' });
             if (!response.ok) throw new Error('Failed to load package details');
 
             const pkg = await response.json();
@@ -354,14 +354,14 @@ function QuotationForm() {
 
             let clientRes;
             if (clientId) {
-                clientRes = await fetch(`/api/clients/${clientId}`, {
+                clientRes = await fetch(`https://apivkq.softodoor.com/api/clients/${clientId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
                     body: JSON.stringify(clientPayload)
                 });
             } else {
-                clientRes = await fetch('/api/clients', {
+                clientRes = await fetch(`${API_URL}/api/clients`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
@@ -561,7 +561,7 @@ function QuotationForm() {
                                     try {
                                         if (items.length > 0 && !confirm('Replace existing items with Sqft defaults?')) return;
 
-                                        const res = await fetch('/api/quotations/defaults/sqft', { credentials: 'include' });
+                                        const res = await fetch(`${API_URL}/api/quotations/defaults/sqft`, { credentials: 'include' });
                                         if (res.ok) {
                                             const data = await res.json();
                                             if (data.items) {

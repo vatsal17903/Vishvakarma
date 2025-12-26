@@ -37,12 +37,12 @@ function ReceiptForm() {
 
     const fetchInitialData = async () => {
         try {
-            const quotationsRes = await fetch('/api/quotations', { credentials: 'include' });
+            const quotationsRes = await fetch(`${API_URL}/api/quotations`, { credentials: 'include' });
             const quotationsData = await quotationsRes.json();
             setQuotations(quotationsData.filter(q => q.status !== 'draft'));
 
             if (isEdit) {
-                const receiptRes = await fetch(`/api/receipts/${id}`, { credentials: 'include' });
+                const receiptRes = await fetch(`https://apivkq.softodoor.com/api/receipts/${id}`, { credentials: 'include' });
                 if (!receiptRes.ok) throw new Error('Receipt not found');
                 const receipt = await receiptRes.json();
 
@@ -65,7 +65,7 @@ function ReceiptForm() {
 
     const fetchQuotationDetails = async (quotationId) => {
         try {
-            const response = await fetch(`/api/receipts/quotation/${quotationId}`, { credentials: 'include' });
+            const response = await fetch(`https://apivkq.softodoor.com/api/receipts/quotation/${quotationId}`, { credentials: 'include' });
             const data = await response.json();
 
             const quotation = quotations.find(q => q.id === parseInt(quotationId));
@@ -134,7 +134,7 @@ function ReceiptForm() {
 
         setLoading(true);
         try {
-            const response = await fetch(`/api/receipts/${id}`, {
+            const response = await fetch(`https://apivkq.softodoor.com/api/receipts/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });

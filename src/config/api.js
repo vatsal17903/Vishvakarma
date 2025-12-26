@@ -1,5 +1,6 @@
 // API Configuration
-const API_URL = import.meta.env.VITE_API_URL || '';
+// Temporary hardcoded fix - Vite env not working
+const API_URL = 'https://apivkq.softodoor.com';
 
 // For production: use full backend URL
 // For development: use empty string (Vite proxy handles it)

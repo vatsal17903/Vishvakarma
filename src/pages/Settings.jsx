@@ -33,7 +33,7 @@ function Settings() {
 
     const fetchCompanyDetails = async () => {
         try {
-            const response = await fetch('/api/company/current', { credentials: 'include' });
+            const response = await fetch(`${API_URL}/api/company/current`, { credentials: 'include' });
             const data = await response.json();
             if (data.company) {
                 setCompanyForm(data.company);
@@ -48,7 +48,7 @@ function Settings() {
         setLoading(true);
 
         try {
-            const response = await fetch(`/api/company/${companyForm.id}`, {
+            const response = await fetch(`https://apivkq.softodoor.com/api/company/${companyForm.id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -76,7 +76,7 @@ function Settings() {
         setLoading(true);
 
         try {
-            const response = await fetch('/api/auth/change-password', {
+            const response = await fetch(`${API_URL}/api/auth/change-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',

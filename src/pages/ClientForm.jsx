@@ -27,7 +27,7 @@ function ClientForm() {
 
     const fetchClient = async () => {
         try {
-            const response = await fetch(`/api/clients/${id}`, { credentials: 'include' });
+            const response = await fetch(`https://apivkq.softodoor.com/api/clients/${id}`, { credentials: 'include' });
             if (!response.ok) throw new Error('Client not found');
             const data = await response.json();
             setFormData(data);
@@ -83,7 +83,7 @@ function ClientForm() {
 
         setLoading(true);
         try {
-            const response = await fetch(`/api/clients/${id}`, {
+            const response = await fetch(`https://apivkq.softodoor.com/api/clients/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });
