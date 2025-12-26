@@ -56,7 +56,7 @@ function QuotationView() {
     };
 
     const handleDownloadPDF = () => {
-        window.open(`/api/pdf/quotation/${id}`, '_blank');
+        window.open(`${API_URL}/api/pdf/quotation/${id}`, '_blank');
     };
 
 
@@ -67,7 +67,8 @@ function QuotationView() {
 
     const handleCreateBill = async () => {
         try {
-            const response = await fetch(`${API_URL}/api/bills`, { method: 'POST', headers: getAuthHeaders(),
+            const response = await fetch(`${API_URL}/api/bills`, {
+                method: 'POST',
                 headers: getAuthHeaders(),
                 body: JSON.stringify({ quotation_id: id })
             });

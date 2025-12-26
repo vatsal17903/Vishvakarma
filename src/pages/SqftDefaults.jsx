@@ -45,7 +45,8 @@ function SqftDefaults() {
     const handleSave = async () => {
         setSaving(true);
         try {
-            const res = await fetch(`${API_URL}/api/sqft-defaults`, { method: 'PUT', headers: getAuthHeaders(),
+            const res = await fetch(`${API_URL}/api/sqft-defaults`, {
+                method: 'PUT',
                 headers: getAuthHeaders(),
                 body: JSON.stringify({ items })
             });

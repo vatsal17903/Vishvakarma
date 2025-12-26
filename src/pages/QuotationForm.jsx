@@ -365,12 +365,14 @@ function QuotationForm() {
 
             let clientRes;
             if (clientId) {
-                clientRes = await fetch(`${API_URL}/api/clients/${clientId}`, { method: 'PUT', headers: getAuthHeaders(),
+                clientRes = await fetch(`${API_URL}/api/clients/${clientId}`, {
+                    method: 'PUT',
                     headers: getAuthHeaders(),
                     body: JSON.stringify(clientPayload)
                 });
             } else {
-                clientRes = await fetch(`${API_URL}/api/clients`, { method: 'POST', headers: getAuthHeaders(),
+                clientRes = await fetch(`${API_URL}/api/clients`, {
+                    method: 'POST',
                     headers: getAuthHeaders(),
                     body: JSON.stringify(clientPayload)
                 });
@@ -390,7 +392,7 @@ function QuotationForm() {
             setFormData(prev => ({ ...prev, client_id: clientId }));
 
             // 2. Save Quotation
-            const url = isEdit ? `/api/quotations/${id}` : '/api/quotations';
+            const url = isEdit ? `${API_URL}/api/quotations/${id}` : `${API_URL}/api/quotations`;
             const method = isEdit ? 'PUT' : 'POST';
 
             const response = await fetch(url, {

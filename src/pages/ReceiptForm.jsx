@@ -105,7 +105,7 @@ function ReceiptForm() {
 
         setLoading(true);
         try {
-            const url = isEdit ? `/api/receipts/${id}` : '/api/receipts';
+            const url = isEdit ? `${API_URL}/api/receipts/${id}` : `${API_URL}/api/receipts`;
             const method = isEdit ? 'PUT' : 'POST';
 
             const response = await fetch(url, {
@@ -133,7 +133,7 @@ function ReceiptForm() {
 
     const handleDownloadPDF = () => {
         if (id) {
-            window.open(`/api/pdf/receipt/${id}`, '_blank');
+            window.open(`${API_URL}/api/pdf/receipt/${id}`, '_blank');
         }
     };
 

@@ -111,7 +111,7 @@ function PackageForm() {
 
         setLoading(true);
         try {
-            const url = isEdit ? `/api/packages/${id}` : '/api/packages';
+            const url = isEdit ? `${API_URL}/api/packages/${id}` : `${API_URL}/api/packages`;
             const method = isEdit ? 'PUT' : 'POST';
 
             // Ensure item_name is populated

@@ -59,7 +59,8 @@ function Settings() {
         setLoading(true);
 
         try {
-            const response = await fetch(`${API_URL}/api/company/${companyForm.id}`, { method: 'PUT', headers: getAuthHeaders(),
+            const response = await fetch(`${API_URL}/api/company/${companyForm.id}`, {
+                method: 'PUT',
                 headers: getAuthHeaders(),
                 body: JSON.stringify(companyForm)
             });
@@ -85,7 +86,8 @@ function Settings() {
         setLoading(true);
 
         try {
-            const response = await fetch(`${API_URL}/api/auth/change-password`, { method: 'POST', headers: getAuthHeaders(),
+            const response = await fetch(`${API_URL}/api/auth/change-password`, {
+                method: 'POST',
                 headers: getAuthHeaders(),
                 body: JSON.stringify({
                     currentPassword: passwordForm.currentPassword,

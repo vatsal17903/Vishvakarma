@@ -65,7 +65,7 @@ function ClientForm() {
 
         setLoading(true);
         try {
-            const url = isEdit ? `/api/clients/${id}` : '/api/clients';
+            const url = isEdit ? `${API_URL}/api/clients/${id}` : `${API_URL}/api/clients`;
             const method = isEdit ? 'PUT' : 'POST';
 
             const response = await fetch(url, {

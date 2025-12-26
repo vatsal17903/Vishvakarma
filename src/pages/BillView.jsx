@@ -56,7 +56,7 @@ function BillView() {
     };
 
     const handleDownloadPDF = () => {
-        window.open(`/api/pdf/bill/${id}`, '_blank');
+        window.open(`${API_URL}/api/pdf/bill/${id}`, '_blank');
     };
 
 
