@@ -1,461 +1,308 @@
-# Vishvakarma - CRM for Construction & Interior Business
+# Vishvakarma CRM - Frontend
 
-A full-stack CRM application built with React (frontend) and Express.js (backend) for managing construction and interior business operations.
+React + Vite frontend for Vishvakarma CRM system - A complete CRM solution for Construction & Interior businesses.
 
-## ⚡ Quick Start
+## 🚀 Tech Stack
 
-**For experienced developers who want to get started immediately:**
+- **Framework:** React 18
+- **Build Tool:** Vite 6
+- **Routing:** React Router v6
+- **Styling:** CSS
+- **HTTP Client:** Fetch API
 
-```bash
-# 1. Create MySQL database
-mysql -u root -p
-CREATE DATABASE vishvakara;
-exit;
+## 📋 Features
 
-# 2. Configure backend/.env with your MySQL credentials
+- ✅ User Authentication & Authorization
+- ✅ Company Management
+- ✅ Client Management
+- ✅ Package Management (Service Packages)
+- ✅ Quotation Generation with Custom Columns
+- ✅ Receipt Management
+- ✅ Bill Management
+- ✅ PDF Generation (Quotations, Receipts, Bills)
+- ✅ Reports & Analytics
+- ✅ Square Foot Default Settings
+- ✅ Multi-company Support
 
-# 3. Install backend dependencies
-cd backend
-npm install
+## 🛠️ Setup & Installation
 
-# 4. Install frontend dependencies
-cd ../frontend
-npm install
+### Prerequisites
 
-# 5. Start backend (Terminal 1)
-cd backend
-npm run dev
+- Node.js 18.x or higher
+- npm or yarn
+- Backend API running (see [backend repository](https://github.com/vatsal17903/vishvakarma-backend))
 
-# 6. Start frontend (Terminal 2)
-cd frontend
-npm run dev
+### Installation
 
-# 7. Open http://localhost:5173
-# Login: admin / admin123
-```
+1. **Clone the repository:**
+   ```bash
+   git clone git@github.com:vatsal17903/Vishvakarma.git
+   cd Vishvakarma
+   ```
 
-**For detailed setup instructions, see the [Complete Setup Guide](#-complete-setup-guide) below.**
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Configure environment:**
+
+   Copy the example environment file:
+   ```bash
+   cp .env.example .env.development
+   ```
+
+   For local development, you can leave it empty (uses Vite proxy):
+   ```env
+   VITE_API_URL=
+   ```
+
+   Or connect directly to backend:
+   ```env
+   VITE_API_URL=http://localhost:3006
+   ```
+
+4. **Start development server:**
+   ```bash
+   npm run dev
+   ```
+
+   Open http://localhost:5173
 
 ## 📁 Project Structure
 
 ```
-Vishvakarma/
-├── backend/          # Express.js backend API
-│   ├── server/       # Server code
-│   │   ├── index.js     # Main server file
-│   │   ├── routes/      # API route handlers
-│   │   ├── database/    # Database configuration
-│   │   └── *.js         # Migration and utility scripts
-│   ├── .env             # Environment variables (not in git)
-│   ├── package.json     # Backend dependencies
-│   ├── START.md         # Quick start guide
-│   └── node_modules/    # Backend dependencies (installed)
-│
-├── frontend/         # React + Vite frontend application
-│   ├── src/          # React components, pages, and context
-│   │   ├── components/  # Reusable UI components
-│   │   ├── pages/       # Page components
-│   │   ├── context/     # React context providers
-│   │   ├── App.jsx      # Main app component
-│   │   ├── main.jsx     # Entry point
-│   │   └── index.css    # Global styles
-│   ├── index.html       # HTML entry point
-│   ├── vite.config.js   # Vite configuration
-│   ├── package.json     # Frontend dependencies
-│   ├── START.md         # Quick start guide
-│   └── node_modules/    # Frontend dependencies (installed)
-│
-├── .git/             # Git version control
-├── .gitignore        # Git ignore rules
-└── README.md         # This file - Complete documentation
+/
+├── src/
+│   ├── components/          # Reusable components
+│   │   └── Layout.jsx       # Main layout wrapper
+│   ├── context/             # React Context providers
+│   │   ├── AuthContext.jsx  # Authentication state
+│   │   └── ToastContext.jsx # Toast notifications
+│   ├── pages/               # Page components
+│   │   ├── Login.jsx
+│   │   ├── Dashboard.jsx
+│   │   ├── Clients.jsx
+│   │   ├── Quotations.jsx
+│   │   └── ... (more pages)
+│   ├── utils/               # Utility functions
+│   │   └── api.js           # API helper functions
+│   ├── config/              # Configuration
+│   │   └── api.js           # API URL configuration
+│   ├── App.jsx              # Root component
+│   ├── main.jsx             # Entry point
+│   └── index.css            # Global styles
+├── .env.example             # Environment template
+├── .env.development         # Development config
+├── .env.production          # Production config
+├── vite.config.js           # Vite configuration
+├── package.json             # Dependencies
+└── README.md                # This file
 ```
 
-## 🚀 Complete Setup Guide
+## 🌍 Environment Variables
 
-Follow these steps to set up and run the project from scratch:
+See [README_ENV.md](./README_ENV.md) for detailed environment configuration.
 
-### **Step 1: Prerequisites**
+### Development
 
-Make sure you have the following installed on your system:
-
-- **Node.js** (v16 or higher) - [Download here](https://nodejs.org/)
-- **npm** (comes with Node.js)
-- **MySQL** (v5.7 or higher) - [Download here](https://dev.mysql.com/downloads/mysql/)
-- **Git** (optional, for cloning)
-
-Verify installations:
-```bash
-node --version   # Should show v16.x.x or higher
-npm --version    # Should show 8.x.x or higher
-mysql --version  # Should show MySQL version
-```
-
-### **Step 2: Clone or Download the Project**
-
-```bash
-# If using Git
-git clone <repository-url>
-cd Vishvakarma
-
-# Or download and extract the ZIP file, then navigate to the folder
-cd Vishvakarma
-```
-
-### **Step 3: Database Setup**
-
-#### 3.1 Create MySQL Database
-
-Open your MySQL client (MySQL Workbench, command line, or any other tool) and run:
-
-```sql
-CREATE DATABASE vishvakara;
-```
-
-**Note:** The database name must be exactly `vishvakara` (or update the `.env` file accordingly).
-
-#### 3.2 Configure Database Connection
-
-The backend already has a `.env` file. Verify or update it with your MySQL credentials:
-
-**Location:** `backend/.env`
-
+Create `.env.development`:
 ```env
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=your_mysql_password
-DB_NAME=vishvakara
-PORT=3006
-SESSION_SECRET=your-secret-key-here
+# Leave empty to use Vite proxy
+VITE_API_URL=
 ```
 
-**Important:** Replace `your_mysql_password` with your actual MySQL root password.
+### Production
 
-### **Step 4: Install Dependencies**
+Create `.env.production`:
+```env
+# Use your actual backend domain
+VITE_API_URL=https://apivkq.softodoor.com
+```
 
-Install dependencies for both backend and frontend from their respective directories.
-
-#### 4.1 Install Backend Dependencies
-
-Navigate to the backend directory and install:
+## 🏗️ Build for Production
 
 ```bash
-cd backend
-npm install
-```
-
-This will install all backend dependencies (Express, MySQL2, bcryptjs, etc.)
-
-You should see output like:
-```
-added XXX packages, and audited XXX packages in Xs
-found 0 vulnerabilities
-```
-
-#### 4.2 Install Frontend Dependencies
-
-Navigate to the frontend directory and install:
-
-```bash
-cd frontend
-npm install
-```
-
-This will install all frontend dependencies (React, Vite, React Router, etc.)
-
-You should see output like:
-```
-added XXX packages, and audited XXX packages in Xs
-found 0 vulnerabilities
-```
-
-### **Step 5: Start the Application**
-
-You need to start both the backend and frontend servers. Open **two separate terminals**.
-
-#### **Terminal 1 - Start Backend Server**
-
-Navigate to the backend directory and start the server:
-
-```bash
-cd backend
-npm run dev
-```
-
-You should see:
-```
-✅ MySQL Database initialized successfully
-🚀 Server running on http://localhost:3006
-📁 API available at http://localhost:3006/api
-```
-
-#### **Terminal 2 - Start Frontend Server**
-
-Navigate to the frontend directory and start the development server:
-
-```bash
-cd frontend
-npm run dev
-```
-
-You should see:
-```
-VITE v6.4.1  ready in XXX ms
-
-➜  Local:   http://localhost:5173/
-➜  Network: http://192.168.1.53:5173/
-```
-
-### **Step 6: Access the Application**
-
-Once both servers are running, open your browser and navigate to:
-
-🌐 **Frontend:** [http://localhost:5173](http://localhost:5173)
-
-The frontend will automatically proxy API requests to the backend at `http://localhost:3006/api`
-
-### **Step 7: Login**
-
-Use the default admin credentials:
-
-- **Username:** `admin`
-- **Password:** `admin123`
-
-**Note:** These credentials are automatically created when the database is initialized on first run.
-
-## 📋 Available Scripts
-
-### **Backend Scripts** (Run from `backend/` directory)
-
-```bash
-cd backend
-```
-
-| Command | Description |
-|---------|-------------|
-| `npm install` | Install backend dependencies |
-| `npm run dev` | Start backend development server |
-| `npm start` | Start backend in production mode |
-
-### **Frontend Scripts** (Run from `frontend/` directory)
-
-```bash
-cd frontend
-```
-
-| Command | Description |
-|---------|-------------|
-| `npm install` | Install frontend dependencies |
-| `npm run dev` | Start frontend development server |
-| `npm run build` | Build frontend for production |
-| `npm run preview` | Preview production build locally |
-
-## 🛠️ Tech Stack
-
-### Frontend
-- **React 18** - UI library
-- **React Router DOM** - Client-side routing
-- **Vite** - Build tool and dev server
-- **Vanilla CSS** - Styling
-
-### Backend
-- **Express.js** - Web framework
-- **MySQL2** - Database driver
-- **bcryptjs** - Password hashing
-- **express-session** - Session management
-- **dotenv** - Environment variable management
-- **PDFKit** - PDF generation
-- **UUID** - Unique ID generation
-- **CORS** - Cross-origin resource sharing
-
-## 🔧 Configuration
-
-### Frontend Configuration
-
-**File:** `frontend/vite.config.js`
-
-The Vite config includes:
-- React plugin
-- Development server on port 5173
-- API proxy to backend (http://localhost:3006)
-- Network exposure for local network access
-
-### Backend Configuration
-
-**File:** `backend/.env`
-
-Environment variables:
-- `DB_HOST` - MySQL host (default: localhost)
-- `DB_USER` - MySQL username (default: root)
-- `DB_PASSWORD` - MySQL password
-- `DB_NAME` - Database name (default: vishvakara)
-- `PORT` - Backend server port (default: 3006)
-- `SESSION_SECRET` - Secret key for session encryption
-
-## 🗄️ Database
-
-The application uses MySQL database. On first run, the backend will automatically:
-
-1. Create necessary tables
-2. Add required columns
-3. Create default admin user (username: `admin`, password: `admin123`)
-4. Populate default companies and packages
-
-**Database Name:** `vishvakara`
-
-## 🚨 Troubleshooting
-
-### Issue: "Unknown database 'vishvakara'"
-
-**Solution:** Create the database in MySQL:
-```sql
-CREATE DATABASE vishvakara;
-```
-
-### Issue: "Access denied for user 'root'@'localhost'"
-
-**Solution:** Check your MySQL credentials in `backend/.env` and ensure they are correct.
-
-### Issue: "Port 3006 already in use"
-
-**Solution:** Either:
-1. Stop the process using port 3006, or
-2. Change the `PORT` in `backend/.env` to another port (e.g., 3007)
-
-### Issue: "Port 5173 already in use"
-
-**Solution:** Vite will automatically try the next available port (5174, 5175, etc.)
-
-### Issue: Frontend can't connect to backend
-
-**Solution:** 
-1. Ensure backend is running on port 3006
-2. Check the proxy configuration in `frontend/vite.config.js`
-3. Verify CORS is enabled in backend
-
-### Issue: Dependencies installation fails
-
-**Solution:**
-1. Clear npm cache: `npm cache clean --force`
-2. Delete all `node_modules` folders and `package-lock.json` files
-3. Run `npm install` again
-
-## 📝 Development Workflow
-
-### **Recommended Setup**
-
-For the best development experience, use **two separate terminal windows/tabs**:
-
-**Terminal 1 - Backend:**
-```bash
-cd backend
-npm run dev
-```
-Keep this running. The backend will restart automatically if you make changes (you may need to use nodemon for auto-restart).
-
-**Terminal 2 - Frontend:**
-```bash
-cd frontend
-npm run dev
-```
-Keep this running. Vite will hot-reload automatically when you make changes.
-
-### **Making Changes**
-
-#### Frontend Changes
-1. Navigate to `frontend/src/`
-2. Edit your React components, pages, or styles
-3. Save the file
-4. Vite will automatically hot-reload the browser ✨
-
-#### Backend Changes
-1. Navigate to `backend/server/`
-2. Edit your routes, database logic, or server configuration
-3. Save the file
-4. Manually restart the backend server (or use nodemon for auto-restart)
-
-### **Adding New Dependencies**
-
-#### Add Frontend Dependency
-```bash
-cd frontend
-npm install <package-name>
-```
-
-#### Add Backend Dependency
-```bash
-cd backend
-npm install <package-name>
-```
-
-### **Working Directory Structure**
-
-When developing, you'll primarily work in these directories:
-
-```
-frontend/src/
-├── components/    # Reusable UI components
-├── pages/        # Page components (routes)
-├── context/      # React context providers
-├── App.jsx       # Main app component
-├── main.jsx      # Entry point
-└── index.css     # Global styles
-
-backend/server/
-├── routes/       # API route handlers
-├── database/     # Database configuration
-└── index.js      # Main server file
-```
-
-## 🏗️ Building for Production
-
-### Build Frontend
-
-Navigate to the frontend directory and build:
-
-```bash
-cd frontend
 npm run build
 ```
 
-This creates an optimized production build in `frontend/dist/`
+This creates a `dist/` folder with optimized production files.
 
-### Start Backend in Production
-
-Navigate to the backend directory and start:
+### Preview Production Build
 
 ```bash
-cd backend
-npm start
+npm run preview
 ```
 
-This starts the backend server in production mode.
+## 🚀 Deployment
 
-## 📦 Project Features
+### Production Domains
 
-- User authentication and session management
-- Company management
-- Package management
-- Master creation workflow
-- Exam entry and notifications
-- Student-wise data management
-- PDF generation and export
-- Responsive design
+- **Frontend:** https://vishvakarmaquotation.softodoor.com
+- **Backend API:** https://apivkq.softodoor.com
 
-## 🔐 Security Notes
+### Deployment Steps
 
-- Change the default admin password after first login
-- Update `SESSION_SECRET` in `backend/.env` with a strong random string
-- Never commit `.env` files to version control
-- Use environment-specific `.env` files for different environments
+1. **Update `.env.production` with backend URL:**
+   ```env
+   VITE_API_URL=https://apivkq.softodoor.com
+   ```
+
+2. **Build the application:**
+   ```bash
+   npm run build
+   ```
+
+3. **Upload `dist/` folder to your web server**
+   - Via FTP, SFTP, or your hosting provider's file manager
+   - Point document root to the uploaded files
+
+4. **Configure web server:**
+   - Point document root to `dist/` or uploaded location
+   - Enable SPA routing (all routes → index.html)
+   - Enable HTTPS/SSL
+
+For detailed deployment instructions, see the [backend repository](https://github.com/vatsal17903/vishvakarma-backend) deployment guide.
+
+## 🔌 API Integration
+
+This frontend connects to the Vishvakarma Backend API.
+
+**Backend Repository:** [vishvakarma-backend](https://github.com/vatsal17903/vishvakarma-backend)
+
+### API Helper Functions
+
+```javascript
+import { apiGet, apiPost, apiPut, apiDelete } from './utils/api';
+
+// GET request
+const response = await apiGet('/api/clients');
+const clients = await response.json();
+
+// POST request
+const response = await apiPost('/api/clients', {
+  name: 'John Doe',
+  email: 'john@example.com'
+});
+
+// PUT request
+const response = await apiPut('/api/clients/1', { name: 'Updated Name' });
+
+// DELETE request
+await apiDelete('/api/clients/1');
+```
+
+The API utilities automatically handle:
+- Base URL configuration (development vs production)
+- Authentication cookies
+- JSON headers
+
+## 📱 Features Overview
+
+### Dashboard
+- Quick stats overview
+- Recent quotations
+- Pending bills
+
+### Client Management
+- Add/Edit/Delete clients
+- Track client projects
+- Client contact information
+
+### Package Management
+- Create service packages
+- Define package items
+- Set pricing tiers (Silver, Gold, Platinum)
+- BHK-based packages (1 BHK, 2 BHK, 3 BHK, 4 BHK)
+
+### Quotation System
+- Generate detailed quotations
+- Custom column configuration
+- Automatic calculations (subtotal, tax, total)
+- PDF export
+- Multiple room types
+
+### Receipt & Bill Management
+- Track payments
+- Generate receipts
+- Create bills linked to quotations
+- Payment mode tracking
+
+### Reports
+- Quotation reports
+- Receipt reports
+- Client reports
+- Date range filtering
+
+## 🔐 Authentication
+
+Default credentials (set on backend):
+- **Username:** admin
+- **Password:** admin123
+
+**Note:** Change these credentials after first login in production!
+
+## 🛡️ Security Notes
+
+- Never commit `.env` files with sensitive data
+- Only commit `.env.example` as a template
+- Use HTTPS in production
+- Configure CORS properly on backend
+- Keep dependencies updated
+
+## 📝 Available Scripts
+
+- `npm run dev` - Start development server (http://localhost:5173)
+- `npm run build` - Build for production (output: `dist/`)
+- `npm run preview` - Preview production build locally
+
+## 🔗 Related Repositories
+
+- **Backend API:** [vishvakarma-backend](https://github.com/vatsal17903/vishvakarma-backend)
+
+## 🚨 Troubleshooting
+
+### Frontend Can't Connect to Backend
+
+**Solution:**
+1. Ensure backend is running
+2. Check `VITE_API_URL` in your `.env` file
+3. Verify Vite proxy configuration in `vite.config.js`
+4. Check browser console for CORS errors
+
+### Build Fails
+
+**Solution:**
+1. Clear node_modules: `rm -rf node_modules`
+2. Clear cache: `npm cache clean --force`
+3. Reinstall: `npm install`
+4. Rebuild: `npm run build`
+
+### Environment Variables Not Working
+
+**Solution:**
+1. Ensure variable names start with `VITE_`
+2. Restart dev server after changing `.env` files
+3. Rebuild for production after changing `.env.production`
 
 ## 📄 License
 
 ISC
 
-## 👥 Support
+## 🤝 Contributing
 
-For issues or questions, please contact the development team or create an issue in the repository.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a pull request
+
+## 📧 Support
+
+For issues and questions:
+- Open an issue in this repository
+- Check the [backend repository](https://github.com/vatsal17903/vishvakarma-backend) for API-related issues
 
 ---
 
-**Happy Coding! 🚀**
+**Built with ❤️ for Construction & Interior Businesses**
