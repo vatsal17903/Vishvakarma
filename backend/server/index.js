@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import session from 'express-session';
@@ -20,10 +21,16 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const isProduction = process.env.NODE_ENV === 'production';
+
+// CORS Configuration - Allow frontend domain
+const allowedOrigins = process.env.FRONTEND_URL
+    ? process.env.FRONTEND_URL.split(',').map(url => url.trim())
+    : ['http://localhost:5173', 'http://127.0.0.1:5173'];
 
 // Middleware
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+    origin: allowedOrigins,
     credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
@@ -31,18 +38,55 @@ app.use(express.urlencoded({ extended: true }));
 
 // Session management
 app.use(session({
-    secret: 'crm-secret-key-2024',
+    secret: process.env.SESSION_SECRET || 'crm-secret-key-2024',
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false,
+        secure: isProduction, // Use secure cookies in production
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        sameSite: isProduction ? 'none' : 'lax' // Required for cross-domain cookies
     }
 }));
 
 // Initialize database
 await initializeDatabase();
+
+// Test/Health Check Route
+app.get('/api/health', (req, res) => {
+    res.json({
+        status: 'OK',
+        message: 'Vishvakarma CRM Backend is running',
+        environment: process.env.NODE_ENV || 'development',
+        timestamp: new Date().toISOString(),
+        port: PORT,
+        database: {
+            name: process.env.DB_NAME,
+            host: process.env.DB_HOST
+        }
+    });
+});
+
+// Root API endpoint
+app.get('/api', (req, res) => {
+    res.json({
+        message: 'Vishvakarma CRM API',
+        version: '1.0.0',
+        endpoints: [
+            '/api/health',
+            '/api/auth',
+            '/api/company',
+            '/api/clients',
+            '/api/packages',
+            '/api/quotations',
+            '/api/receipts',
+            '/api/bills',
+            '/api/reports',
+            '/api/pdf',
+            '/api/sqft-defaults'
+        ]
+    });
+});
 
 // API Routes
 app.use('/api/auth', authRoutes);
