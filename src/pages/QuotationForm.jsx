@@ -332,12 +332,14 @@ function QuotationForm() {
         }
 
         // Validate discount limit (30%)
-        const discountPercent = formData.discount_type === 'percentage'
-            ? formData.discount_value
-            : (formData.discount_value / calculations.subtotal) * 100;
+        if (calculations.subtotal > 0) {
+            const discountPercent = formData.discount_type === 'percentage'
+                ? formData.discount_value
+                : (formData.discount_value / calculations.subtotal) * 100;
 
-        if (discountPercent > 30) {
-            errors.discount_value = 'Discount cannot exceed 30%';
+            if (discountPercent > 30) {
+                errors.discount_value = `Discount cannot exceed 30%. Current discount is ${discountPercent.toFixed(1)}%`;
+            }
         }
 
         // If there are errors, set them and show toast
