@@ -1,0 +1,27 @@
+{
+    "name": "vishvakarma-frontend",
+    "version": "1.0.0",
+    "description": "CRM for Construction & Interior Business - Frontend",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "keywords": [
+        "crm",
+        "construction",
+        "interior"
+    ],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "react-router-dom": "^6.28.0"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-react": "^4.3.3",
+        "vite": "^6.0.3"
+    }
+}
