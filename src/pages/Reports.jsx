@@ -2,6 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useToast } from '../context/ToastContext';
 import { API_URL } from '../config/api';
 
+
+// Helper to get auth headers
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return {
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` })
+    };
+};
+
 function Reports() {
     const [dateRange, setDateRange] = useState({
         start: new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0],
@@ -31,9 +41,9 @@ function Reports() {
             const query = `start_date=${dateRange.start}&end_date=${dateRange.end}`;
 
             const [summaryRes, bedroomRes, projectRes] = await Promise.all([
-                fetch(`${API_URL}/api/reports/summary?${query}`, { credentials: 'include' }),
-                fetch(`${API_URL}/api/reports/bedroom-wise?${query}`, { credentials: 'include' }),
-                fetch(`${API_URL}/api/reports/project-wise?${query}`, { credentials: 'include' })
+                fetch(`${API_URL}/api/reports/summary?${query}`, { headers: getAuthHeaders() }),
+                fetch(`${API_URL}/api/reports/bedroom-wise?${query}`, { headers: getAuthHeaders() }),
+                fetch(`${API_URL}/api/reports/project-wise?${query}`, { headers: getAuthHeaders() })
             ]);
 
             setSummary(await summaryRes.json());
@@ -48,7 +58,7 @@ function Reports() {
 
     const fetchTrends = async () => {
         try {
-            const response = await fetch(`${API_URL}/api/reports/monthly-trend`, { credentials: 'include' });
+            const response = await fetch(`${API_URL}/api/reports/monthly-trend`, { headers: getAuthHeaders() });
             setMonthlyTrend(await response.json());
         } catch (error) {
             console.error('Failed to load trends');

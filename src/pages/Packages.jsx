@@ -3,6 +3,16 @@ import { Link } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import { API_URL } from '../config/api';
 
+
+// Helper to get auth headers
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return {
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` })
+    };
+};
+
 function Packages() {
     const [packages, setPackages] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -15,7 +25,7 @@ function Packages() {
 
     const fetchPackages = async () => {
         try {
-            const response = await fetch(`${API_URL}/api/packages`, { credentials: 'include' });
+            const response = await fetch(`${API_URL}/api/packages`, { headers: getAuthHeaders() });
             const data = await response.json();
             setPackages(data);
         } catch (error) {
@@ -30,9 +40,7 @@ function Packages() {
         if (!confirm('Are you sure you want to delete this package?')) return;
 
         try {
-            const response = await fetch(`${API_URL}/api/packages/${id}`, {
-                method: 'DELETE',
-                credentials: 'include'
+            const response = await fetch(`${API_URL}/api/packages/${id}`, { method: 'DELETE', headers: getAuthHeaders()
             });
 
             if (!response.ok) {

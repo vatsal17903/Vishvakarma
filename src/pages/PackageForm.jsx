@@ -3,6 +3,16 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import { API_URL } from '../config/api';
 
+
+// Helper to get auth headers
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return {
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` })
+    };
+};
+
 const Modal = ({ isOpen, onClose, title, children, footer }) => {
     if (!isOpen) return null;
     return (
@@ -65,7 +75,7 @@ function PackageForm() {
 
     const fetchPackage = async () => {
         try {
-            const response = await fetch(`${API_URL}/api/packages/${id}`, { credentials: 'include' });
+            const response = await fetch(`${API_URL}/api/packages/${id}`, { headers: getAuthHeaders() });
             if (!response.ok) throw new Error('Package not found');
             const data = await response.json();
 
@@ -113,8 +123,7 @@ function PackageForm() {
 
             const response = await fetch(url, {
                 method,
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                     ...formData,
                     base_rate_sqft: parseFloat(formData.base_rate_sqft),
@@ -284,9 +293,7 @@ function PackageForm() {
 
         setLoading(true);
         try {
-            const response = await fetch(`${API_URL}/api/packages/${id}`, {
-                method: 'DELETE',
-                credentials: 'include'
+            const response = await fetch(`${API_URL}/api/packages/${id}`, { method: 'DELETE', headers: getAuthHeaders()
             });
 
             if (!response.ok) {

@@ -3,6 +3,16 @@ import { Link } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import { API_URL } from '../config/api';
 
+
+// Helper to get auth headers
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return {
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` })
+    };
+};
+
 function Quotations() {
     const [quotations, setQuotations] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -15,7 +25,7 @@ function Quotations() {
 
     const fetchQuotations = async () => {
         try {
-            const response = await fetch(`${API_URL}/api/quotations`, { credentials: 'include' });
+            const response = await fetch(`${API_URL}/api/quotations`, { headers: getAuthHeaders() });
             const data = await response.json();
             setQuotations(data);
         } catch (error) {
@@ -30,9 +40,7 @@ function Quotations() {
         if (!confirm('Are you sure you want to delete this quotation?')) return;
 
         try {
-            const response = await fetch(`${API_URL}/api/quotations/${id}`, {
-                method: 'DELETE',
-                credentials: 'include'
+            const response = await fetch(`${API_URL}/api/quotations/${id}`, { method: 'DELETE', headers: getAuthHeaders()
             });
 
             if (!response.ok) {

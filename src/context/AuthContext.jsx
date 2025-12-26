@@ -14,8 +14,17 @@ export function AuthProvider({ children }) {
 
     const checkSession = async () => {
         try {
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                setLoading(false);
+                return;
+            }
+
             const response = await fetch(`${API_URL}/api/auth/session`, {
-                credentials: 'include'
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             });
             const data = await response.json();
 
@@ -27,9 +36,13 @@ export function AuthProvider({ children }) {
                         name: data.companyName
                     });
                 }
+            } else {
+                // Token invalid, clear it
+                localStorage.removeItem('token');
             }
         } catch (error) {
             console.error('Session check failed:', error);
+            localStorage.removeItem('token');
         } finally {
             setLoading(false);
         }
@@ -39,7 +52,6 @@ export function AuthProvider({ children }) {
         const response = await fetch(`${API_URL}/api/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
             body: JSON.stringify({ username, password })
         });
 
@@ -49,6 +61,9 @@ export function AuthProvider({ children }) {
             throw new Error(data.error || 'Login failed');
         }
 
+        // Store JWT token
+        localStorage.setItem('token', data.token);
+
         setUser(data.user);
         setCompany(null); // Force company selection every login
         return data;
@@ -56,22 +71,30 @@ export function AuthProvider({ children }) {
 
     const logout = async () => {
         try {
+            const token = localStorage.getItem('token');
             await fetch(`${API_URL}/api/auth/logout`, {
                 method: 'POST',
-                credentials: 'include'
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             });
         } catch (error) {
             console.error('Logout error:', error);
         }
+        localStorage.removeItem('token');
         setUser(null);
         setCompany(null);
     };
 
     const selectCompany = async (companyId) => {
+        const token = localStorage.getItem('token');
+
         const response = await fetch(`${API_URL}/api/company/select`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
             body: JSON.stringify({ companyId })
         });
 
@@ -80,6 +103,9 @@ export function AuthProvider({ children }) {
         if (!response.ok) {
             throw new Error(data.error || 'Company selection failed');
         }
+
+        // Update token with company info
+        localStorage.setItem('token', data.token);
 
         setCompany(data.company);
         return data;

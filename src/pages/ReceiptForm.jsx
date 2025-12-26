@@ -3,6 +3,16 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import { API_URL } from '../config/api';
 
+
+// Helper to get auth headers
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return {
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` })
+    };
+};
+
 function ReceiptForm() {
     const { id } = useParams();
     const [searchParams] = useSearchParams();
@@ -38,12 +48,12 @@ function ReceiptForm() {
 
     const fetchInitialData = async () => {
         try {
-            const quotationsRes = await fetch(`${API_URL}/api/quotations`, { credentials: 'include' });
+            const quotationsRes = await fetch(`${API_URL}/api/quotations`, { headers: getAuthHeaders() });
             const quotationsData = await quotationsRes.json();
             setQuotations(quotationsData.filter(q => q.status !== 'draft'));
 
             if (isEdit) {
-                const receiptRes = await fetch(`${API_URL}/api/receipts/${id}`, { credentials: 'include' });
+                const receiptRes = await fetch(`${API_URL}/api/receipts/${id}`, { headers: getAuthHeaders() });
                 if (!receiptRes.ok) throw new Error('Receipt not found');
                 const receipt = await receiptRes.json();
 
@@ -66,7 +76,7 @@ function ReceiptForm() {
 
     const fetchQuotationDetails = async (quotationId) => {
         try {
-            const response = await fetch(`${API_URL}/api/receipts/quotation/${quotationId}`, { credentials: 'include' });
+            const response = await fetch(`${API_URL}/api/receipts/quotation/${quotationId}`, { headers: getAuthHeaders() });
             const data = await response.json();
 
             const quotation = quotations.find(q => q.id === parseInt(quotationId));
@@ -100,8 +110,7 @@ function ReceiptForm() {
 
             const response = await fetch(url, {
                 method,
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                     ...formData,
                     amount: parseFloat(formData.amount)
@@ -135,9 +144,7 @@ function ReceiptForm() {
 
         setLoading(true);
         try {
-            const response = await fetch(`${API_URL}/api/receipts/${id}`, {
-                method: 'DELETE',
-                credentials: 'include'
+            const response = await fetch(`${API_URL}/api/receipts/${id}`, { method: 'DELETE', headers: getAuthHeaders()
             });
 
             if (!response.ok) {

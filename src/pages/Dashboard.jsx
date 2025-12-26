@@ -4,6 +4,16 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { API_URL } from '../config/api';
 
+
+// Helper to get auth headers
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return {
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` })
+    };
+};
+
 function Dashboard() {
     const [stats, setStats] = useState(null);
     const [recentQuotations, setRecentQuotations] = useState([]);
@@ -19,9 +29,9 @@ function Dashboard() {
     const fetchDashboardData = async () => {
         try {
             const [statsRes, quotationsRes, receiptsRes] = await Promise.all([
-                fetch(`${API_URL}/api/reports/dashboard`, { credentials: 'include' }),
-                fetch(`${API_URL}/api/quotations/recent?limit=5`, { credentials: 'include' }),
-                fetch(`${API_URL}/api/receipts/recent?limit=5`, { credentials: 'include' })
+                fetch(`${API_URL}/api/reports/dashboard`, { headers: getAuthHeaders() }),
+                fetch(`${API_URL}/api/quotations/recent?limit=5`, { headers: getAuthHeaders() }),
+                fetch(`${API_URL}/api/receipts/recent?limit=5`, { headers: getAuthHeaders() })
             ]);
 
             const statsData = await statsRes.json();

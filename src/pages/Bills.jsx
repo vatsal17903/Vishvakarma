@@ -3,6 +3,16 @@ import { Link } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import { API_URL } from '../config/api';
 
+
+// Helper to get auth headers
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return {
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` })
+    };
+};
+
 function Bills() {
     const [bills, setBills] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -15,7 +25,7 @@ function Bills() {
 
     const fetchBills = async () => {
         try {
-            const response = await fetch(`${API_URL}/api/bills`, { credentials: 'include' });
+            const response = await fetch(`${API_URL}/api/bills`, { headers: getAuthHeaders() });
             const data = await response.json();
             setBills(data);
         } catch (error) {
@@ -30,9 +40,7 @@ function Bills() {
         if (!confirm('Are you sure you want to delete this bill?')) return;
 
         try {
-            const response = await fetch(`${API_URL}/api/bills/${id}`, {
-                method: 'DELETE',
-                credentials: 'include'
+            const response = await fetch(`${API_URL}/api/bills/${id}`, { method: 'DELETE', headers: getAuthHeaders()
             });
 
             if (!response.ok) {

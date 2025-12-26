@@ -3,6 +3,16 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import { API_URL } from '../config/api';
 
+
+// Helper to get auth headers
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return {
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` })
+    };
+};
+
 function ClientForm() {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -28,7 +38,7 @@ function ClientForm() {
 
     const fetchClient = async () => {
         try {
-            const response = await fetch(`${API_URL}/api/clients/${id}`, { credentials: 'include' });
+            const response = await fetch(`${API_URL}/api/clients/${id}`, { headers: getAuthHeaders() });
             if (!response.ok) throw new Error('Client not found');
             const data = await response.json();
             setFormData(data);
@@ -60,8 +70,7 @@ function ClientForm() {
 
             const response = await fetch(url, {
                 method,
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
+                headers: getAuthHeaders(),
                 body: JSON.stringify(formData)
             });
 
@@ -84,9 +93,7 @@ function ClientForm() {
 
         setLoading(true);
         try {
-            const response = await fetch(`${API_URL}/api/clients/${id}`, {
-                method: 'DELETE',
-                credentials: 'include'
+            const response = await fetch(`${API_URL}/api/clients/${id}`, { method: 'DELETE', headers: getAuthHeaders()
             });
 
             if (!response.ok) {

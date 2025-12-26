@@ -3,8 +3,7 @@
  * Handles API calls with proper URL configuration for both development and production
  */
 
-// Temporary hardcoded fix - Vite env not working
-const API_URL = 'https://apivkq.softodoor.com';
+import { API_URL } from '../config/api';
 
 /**
  * Make a fetch request to the API
@@ -14,11 +13,12 @@ const API_URL = 'https://apivkq.softodoor.com';
  */
 export const apiFetch = async (endpoint, options = {}) => {
     const url = `${API_URL}${endpoint}`;
+    const token = localStorage.getItem('token');
 
     const defaultOptions = {
-        credentials: 'include', // Always include cookies for sessions
         headers: {
             'Content-Type': 'application/json',
+            ...(token && { 'Authorization': `Bearer ${token}` }),
             ...options.headers,
         },
     };

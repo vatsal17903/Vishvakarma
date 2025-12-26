@@ -3,6 +3,16 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import { API_URL } from '../config/api';
 
+
+// Helper to get auth headers
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return {
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` })
+    };
+};
+
 function QuotationForm() {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -89,11 +99,11 @@ function QuotationForm() {
 
     const fetchInitialData = async () => {
         try {
-            const packagesRes = await fetch(`${API_URL}/api/packages`, { credentials: 'include' });
+            const packagesRes = await fetch(`${API_URL}/api/packages`, { headers: getAuthHeaders() });
             setPackages(await packagesRes.json());
 
             if (isEdit) {
-                const quotationRes = await fetch(`${API_URL}/api/quotations/${id}`, { credentials: 'include' });
+                const quotationRes = await fetch(`${API_URL}/api/quotations/${id}`, { headers: getAuthHeaders() });
                 if (!quotationRes.ok) throw new Error('Quotation not found');
                 const quotation = await quotationRes.json();
 
@@ -141,7 +151,7 @@ function QuotationForm() {
             } else {
                 // Fetch company defaults for new quotation
                 try {
-                    const companyRes = await fetch(`${API_URL}/api/company/current`, { credentials: 'include' });
+                    const companyRes = await fetch(`${API_URL}/api/company/current`, { headers: getAuthHeaders() });
                     if (companyRes.ok) {
                         const { company } = await companyRes.json();
                         if (company) {
@@ -214,7 +224,7 @@ function QuotationForm() {
         }
 
         try {
-            const response = await fetch(`${API_URL}/api/packages/${packageId}`, { credentials: 'include' });
+            const response = await fetch(`${API_URL}/api/packages/${packageId}`, { headers: getAuthHeaders() });
             if (!response.ok) throw new Error('Failed to load package details');
 
             const pkg = await response.json();
@@ -355,17 +365,13 @@ function QuotationForm() {
 
             let clientRes;
             if (clientId) {
-                clientRes = await fetch(`${API_URL}/api/clients/${clientId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
+                clientRes = await fetch(`${API_URL}/api/clients/${clientId}`, { method: 'PUT', headers: getAuthHeaders(),
+                    headers: getAuthHeaders(),
                     body: JSON.stringify(clientPayload)
                 });
             } else {
-                clientRes = await fetch(`${API_URL}/api/clients`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
+                clientRes = await fetch(`${API_URL}/api/clients`, { method: 'POST', headers: getAuthHeaders(),
+                    headers: getAuthHeaders(),
                     body: JSON.stringify(clientPayload)
                 });
             }
@@ -389,8 +395,7 @@ function QuotationForm() {
 
             const response = await fetch(url, {
                 method,
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                     ...formData,
                     client_id: clientId,
@@ -562,7 +567,7 @@ function QuotationForm() {
                                     try {
                                         if (items.length > 0 && !confirm('Replace existing items with Sqft defaults?')) return;
 
-                                        const res = await fetch(`${API_URL}/api/quotations/defaults/sqft`, { credentials: 'include' });
+                                        const res = await fetch(`${API_URL}/api/quotations/defaults/sqft`, { headers: getAuthHeaders() });
                                         if (res.ok) {
                                             const data = await res.json();
                                             if (data.items) {

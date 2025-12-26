@@ -3,6 +3,16 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { API_URL } from '../config/api';
 
+
+// Helper to get auth headers
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return {
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` })
+    };
+};
+
 function Settings() {
     const { company, user, logout } = useAuth();
     const toast = useToast();
@@ -34,7 +44,7 @@ function Settings() {
 
     const fetchCompanyDetails = async () => {
         try {
-            const response = await fetch(`${API_URL}/api/company/current`, { credentials: 'include' });
+            const response = await fetch(`${API_URL}/api/company/current`, { headers: getAuthHeaders() });
             const data = await response.json();
             if (data.company) {
                 setCompanyForm(data.company);
@@ -49,10 +59,8 @@ function Settings() {
         setLoading(true);
 
         try {
-            const response = await fetch(`${API_URL}/api/company/${companyForm.id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
+            const response = await fetch(`${API_URL}/api/company/${companyForm.id}`, { method: 'PUT', headers: getAuthHeaders(),
+                headers: getAuthHeaders(),
                 body: JSON.stringify(companyForm)
             });
 
@@ -77,10 +85,8 @@ function Settings() {
         setLoading(true);
 
         try {
-            const response = await fetch(`${API_URL}/api/auth/change-password`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
+            const response = await fetch(`${API_URL}/api/auth/change-password`, { method: 'POST', headers: getAuthHeaders(),
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                     currentPassword: passwordForm.currentPassword,
                     newPassword: passwordForm.newPassword

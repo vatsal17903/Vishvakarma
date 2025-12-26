@@ -3,6 +3,16 @@ import { Link } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import { API_URL } from '../config/api';
 
+
+// Helper to get auth headers
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return {
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` })
+    };
+};
+
 function Clients() {
     const [clients, setClients] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -15,7 +25,7 @@ function Clients() {
 
     const fetchClients = async () => {
         try {
-            const response = await fetch(`${API_URL}/api/clients`, { credentials: 'include' });
+            const response = await fetch(`${API_URL}/api/clients`, { headers: getAuthHeaders() });
             const data = await response.json();
             setClients(data);
         } catch (error) {
@@ -30,9 +40,7 @@ function Clients() {
         if (!confirm('Are you sure you want to delete this client?')) return;
 
         try {
-            const response = await fetch(`${API_URL}/api/clients/${id}`, {
-                method: 'DELETE',
-                credentials: 'include'
+            const response = await fetch(`${API_URL}/api/clients/${id}`, { method: 'DELETE', headers: getAuthHeaders()
             });
 
             if (!response.ok) {
@@ -51,9 +59,7 @@ function Clients() {
         setSearchQuery(query);
         if (query.length >= 2) {
             try {
-                const response = await fetch(`${API_URL}/api/clients/search/${encodeURIComponent(query)}`, {
-                    credentials: 'include'
-                });
+                const response = await fetch(`${API_URL}/api/clients/search/${encodeURIComponent(query)}`, { headers: getAuthHeaders() });
                 const data = await response.json();
                 setClients(data);
             } catch (error) {

@@ -3,6 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import { API_URL } from '../config/api';
 
+
+// Helper to get auth headers
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return {
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` })
+    };
+};
+
 function SqftDefaults() {
     const navigate = useNavigate();
     const toast = useToast();
@@ -17,7 +27,7 @@ function SqftDefaults() {
 
     const fetchDefaults = async () => {
         try {
-            const res = await fetch(`${API_URL}/api/sqft-defaults`, { credentials: 'include' });
+            const res = await fetch(`${API_URL}/api/sqft-defaults`, { headers: getAuthHeaders() });
             if (res.ok) {
                 const data = await res.json();
                 setItems(data.items || []);
@@ -35,10 +45,8 @@ function SqftDefaults() {
     const handleSave = async () => {
         setSaving(true);
         try {
-            const res = await fetch(`${API_URL}/api/sqft-defaults`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
+            const res = await fetch(`${API_URL}/api/sqft-defaults`, { method: 'PUT', headers: getAuthHeaders(),
+                headers: getAuthHeaders(),
                 body: JSON.stringify({ items })
             });
 

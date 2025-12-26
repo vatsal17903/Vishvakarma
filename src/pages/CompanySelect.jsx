@@ -4,6 +4,16 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { API_URL } from '../config/api';
 
+
+// Helper to get auth headers
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return {
+        'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` })
+    };
+};
+
 function CompanySelect() {
     const [companies, setCompanies] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -18,9 +28,7 @@ function CompanySelect() {
 
     const fetchCompanies = async () => {
         try {
-            const response = await fetch(`${API_URL}/api/company`, {
-                credentials: 'include'
-            });
+            const response = await fetch(`${API_URL}/api/company`, { headers: getAuthHeaders() });
             const data = await response.json();
             setCompanies(data);
         } catch (error) {
