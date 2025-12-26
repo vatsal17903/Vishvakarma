@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
+import { API_URL } from '../config/api';
 
 function Bills() {
     const [bills, setBills] = useState([]);
@@ -29,7 +30,7 @@ function Bills() {
         if (!confirm('Are you sure you want to delete this bill?')) return;
 
         try {
-            const response = await fetch(`https://apivkq.softodoor.com/api/bills/${id}`, {
+            const response = await fetch(`${API_URL}/api/bills/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });

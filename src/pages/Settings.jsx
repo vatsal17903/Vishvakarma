@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { API_URL } from '../config/api';
 
 function Settings() {
     const { company, user, logout } = useAuth();
@@ -48,7 +49,7 @@ function Settings() {
         setLoading(true);
 
         try {
-            const response = await fetch(`https://apivkq.softodoor.com/api/company/${companyForm.id}`, {
+            const response = await fetch(`${API_URL}/api/company/${companyForm.id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',

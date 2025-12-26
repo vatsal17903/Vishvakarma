@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
+import { API_URL } from '../config/api';
 
 function BillView() {
     const { id } = useParams();
@@ -16,7 +17,7 @@ function BillView() {
 
     const fetchBill = async () => {
         try {
-            const response = await fetch(`https://apivkq.softodoor.com/api/bills/${id}`, { credentials: 'include' });
+            const response = await fetch(`${API_URL}/api/bills/${id}`, { credentials: 'include' });
             if (!response.ok) throw new Error('Bill not found');
             const data = await response.json();
             setBill(data);
@@ -58,7 +59,7 @@ function BillView() {
         if (!confirm('Are you sure you want to delete this bill?')) return;
 
         try {
-            const response = await fetch(`https://apivkq.softodoor.com/api/bills/${id}`, {
+            const response = await fetch(`${API_URL}/api/bills/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });

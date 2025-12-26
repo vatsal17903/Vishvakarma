@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
+import { API_URL } from '../config/api';
 
 function QuotationForm() {
     const { id } = useParams();
@@ -92,7 +93,7 @@ function QuotationForm() {
             setPackages(await packagesRes.json());
 
             if (isEdit) {
-                const quotationRes = await fetch(`https://apivkq.softodoor.com/api/quotations/${id}`, { credentials: 'include' });
+                const quotationRes = await fetch(`${API_URL}/api/quotations/${id}`, { credentials: 'include' });
                 if (!quotationRes.ok) throw new Error('Quotation not found');
                 const quotation = await quotationRes.json();
 
@@ -213,7 +214,7 @@ function QuotationForm() {
         }
 
         try {
-            const response = await fetch(`https://apivkq.softodoor.com/api/packages/${packageId}`, { credentials: 'include' });
+            const response = await fetch(`${API_URL}/api/packages/${packageId}`, { credentials: 'include' });
             if (!response.ok) throw new Error('Failed to load package details');
 
             const pkg = await response.json();
@@ -354,7 +355,7 @@ function QuotationForm() {
 
             let clientRes;
             if (clientId) {
-                clientRes = await fetch(`https://apivkq.softodoor.com/api/clients/${clientId}`, {
+                clientRes = await fetch(`${API_URL}/api/clients/${clientId}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',

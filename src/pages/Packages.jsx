@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
+import { API_URL } from '../config/api';
 
 function Packages() {
     const [packages, setPackages] = useState([]);
@@ -29,7 +30,7 @@ function Packages() {
         if (!confirm('Are you sure you want to delete this package?')) return;
 
         try {
-            const response = await fetch(`https://apivkq.softodoor.com/api/packages/${id}`, {
+            const response = await fetch(`${API_URL}/api/packages/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });

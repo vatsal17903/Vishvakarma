@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
+import { API_URL } from '../config/api';
 
 const Modal = ({ isOpen, onClose, title, children, footer }) => {
     if (!isOpen) return null;
@@ -64,7 +65,7 @@ function PackageForm() {
 
     const fetchPackage = async () => {
         try {
-            const response = await fetch(`https://apivkq.softodoor.com/api/packages/${id}`, { credentials: 'include' });
+            const response = await fetch(`${API_URL}/api/packages/${id}`, { credentials: 'include' });
             if (!response.ok) throw new Error('Package not found');
             const data = await response.json();
 
@@ -283,7 +284,7 @@ function PackageForm() {
 
         setLoading(true);
         try {
-            const response = await fetch(`https://apivkq.softodoor.com/api/packages/${id}`, {
+            const response = await fetch(`${API_URL}/api/packages/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });

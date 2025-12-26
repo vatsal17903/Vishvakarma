@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
+import { API_URL } from '../config/api';
 
 function QuotationView() {
     const { id } = useParams();
@@ -16,7 +17,7 @@ function QuotationView() {
 
     const fetchQuotation = async () => {
         try {
-            const response = await fetch(`https://apivkq.softodoor.com/api/quotations/${id}`, { credentials: 'include' });
+            const response = await fetch(`${API_URL}/api/quotations/${id}`, { credentials: 'include' });
             if (!response.ok) throw new Error('Quotation not found');
             const data = await response.json();
             setQuotation(data);
@@ -80,7 +81,7 @@ function QuotationView() {
         if (!confirm('Are you sure you want to delete this quotation?')) return;
 
         try {
-            const response = await fetch(`https://apivkq.softodoor.com/api/quotations/${id}`, {
+            const response = await fetch(`${API_URL}/api/quotations/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });

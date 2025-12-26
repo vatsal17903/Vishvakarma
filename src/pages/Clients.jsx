@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
+import { API_URL } from '../config/api';
 
 function Clients() {
     const [clients, setClients] = useState([]);
@@ -29,7 +30,7 @@ function Clients() {
         if (!confirm('Are you sure you want to delete this client?')) return;
 
         try {
-            const response = await fetch(`https://apivkq.softodoor.com/api/clients/${id}`, {
+            const response = await fetch(`${API_URL}/api/clients/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });
@@ -50,7 +51,7 @@ function Clients() {
         setSearchQuery(query);
         if (query.length >= 2) {
             try {
-                const response = await fetch(`https://apivkq.softodoor.com/api/clients/search/${encodeURIComponent(query)}`, {
+                const response = await fetch(`${API_URL}/api/clients/search/${encodeURIComponent(query)}`, {
                     credentials: 'include'
                 });
                 const data = await response.json();

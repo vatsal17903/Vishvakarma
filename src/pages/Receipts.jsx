@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
+import { API_URL } from '../config/api';
 
 function Receipts() {
     const [receipts, setReceipts] = useState([]);
@@ -28,7 +29,7 @@ function Receipts() {
         if (!confirm('Are you sure you want to delete this receipt?')) return;
 
         try {
-            const response = await fetch(`https://apivkq.softodoor.com/api/receipts/${id}`, {
+            const response = await fetch(`${API_URL}/api/receipts/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { API_URL } from '../config/api';
 
-const API_URL = 'https://apivkq.softodoor.com';
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useToast } from '../context/ToastContext';
+import { API_URL } from '../config/api';
 
 function Reports() {
     const [dateRange, setDateRange] = useState({
@@ -30,9 +31,9 @@ function Reports() {
             const query = `start_date=${dateRange.start}&end_date=${dateRange.end}`;
 
             const [summaryRes, bedroomRes, projectRes] = await Promise.all([
-                fetch(`https://apivkq.softodoor.com/api/reports/summary?${query}`, { credentials: 'include' }),
-                fetch(`https://apivkq.softodoor.com/api/reports/bedroom-wise?${query}`, { credentials: 'include' }),
-                fetch(`https://apivkq.softodoor.com/api/reports/project-wise?${query}`, { credentials: 'include' })
+                fetch(`${API_URL}/api/reports/summary?${query}`, { credentials: 'include' }),
+                fetch(`${API_URL}/api/reports/bedroom-wise?${query}`, { credentials: 'include' }),
+                fetch(`${API_URL}/api/reports/project-wise?${query}`, { credentials: 'include' })
             ]);
 
             setSummary(await summaryRes.json());
